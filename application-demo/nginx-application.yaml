@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/john1436/argocd-nginx-lab.git
     targetRevision: main
-    path: applicatio-demo
+    path: nginx-chart
 
   destination:
     server: https://kubernetes.default.svc
