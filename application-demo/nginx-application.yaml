@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-application-demo
+  namespace: argocd
+
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/john1436/argocd-nginx-lab.git
+    targetRevision: main
+    path: applicatio-demo
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: application-demo
+
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
