@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-bluegreen
+  namespace: argocd
+
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/john1436/argocd-nginx-lab.git
+    targetRevision: main
+    path: bluegreen
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: bluegreen
+
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+
+    syncOptions:
+      - CreateNamespace=true
