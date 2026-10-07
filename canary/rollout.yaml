@@ -1,6 +1,5 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
-
 metadata:
   name: nginx-canary
   namespace: canary
@@ -20,7 +19,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: nginx:1.28
+          image: nginx:1.29
           ports:
             - containerPort: 80
 
@@ -28,9 +27,11 @@ spec:
     canary:
       steps:
         - setWeight: 20
-        - pause: {}
+          pause:
+            duration: 30s
 
         - setWeight: 40
-        - pause: {}
+          pause:
+            duration: 30s
 
         - setWeight: 100
