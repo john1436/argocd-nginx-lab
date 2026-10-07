@@ -17,8 +17,7 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: nginx:1.27
-          ports:
+          image: nginx:1.2828282828282828    ports:
             - containerPort: 80
 
   strategy:
