@@ -1,0 +1,56 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: nginx-environments
+  namespace: argocd
+
+spec:
+  generators:
+    - list:
+        elements:
+          - environment: dev
+            namespace: nginx-dev
+            valuesFile: environments/values-dev.yaml
+
+          - environment: staging
+            namespace: nginx-staging
+            valuesFile: environments/values-staging.yaml
+
+          - environment: prod
+            namespace: nginx-prod
+            valuesFile: environments/values-prod.yaml
+
+  template:
+    metadata:
+      name: 'nginx-{{environment}}'
+
+    spec:
+      project: default
+
+      sources:
+
+        # Source 1: Helm chart
+        - repoURL: https://github.com/john1436/argocd-nginx-lab.git
+          targetRevision: main
+          path: nginx-chart
+
+          helm:
+            valueFiles:
+              - $values/{{valuesFile}}
+
+        # Source 2: Git repository containing environment values
+        - repoURL: https://github.com/john1436/argocd-nginx-lab.git
+          targetRevision: main
+          ref: values
+
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{namespace}}'
+
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: true
+
+        syncOptions:
+          - CreateNamespace=true
